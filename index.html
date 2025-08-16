@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Palestine News Hub - Real Time Updates</title>
+        <meta name="description"
+            content="Portal berita Palestina terlengkap dengan update real-time dari sumber resmi">
+        <link rel="stylesheet" href="styles.css">
+        <meta name="theme-color" content="#006400"
+            media="(prefers-color-scheme: light)">
+        <meta name="theme-color" content="#003300"
+            media="(prefers-color-scheme: dark)">
+        <meta name="msapplication-TileColor" content="#006400">
+        <meta name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent">
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap"
+            rel="stylesheet">
+    </head>
+    <body>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <i class="fas fa-mosque"></i>
+                    <h1>Palestine News Hub</h1>
+                </div>
+                <nav class="nav" role="navigation"
+                    aria-label="Main Navigation"
+                    id="main-navigation">
+                    <a href="#home" class="nav-link"
+                        aria-current="page" tabindex="0">Beranda</a>
+                    <a href="#news" class="nav-link" tabindex="0">Berita</a>
+                    <a href="#photos" class="nav-link" tabindex="0">Foto</a>
+                    <a href="#sources" class="nav-link"
+                        tabindex="0">Sumber</a>
+                    <a href="#contact" class="nav-link"
+                        tabindex="0">Kontak</a>
+                </nav>
+                <button class="mobile-menu-toggle" id="mobile-menu"
+                    aria-label="Toggle navigation menu"
+                    aria-expanded="false"
+                    aria-controls="main-navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <img src="images/flag-palestine.jpg" alt="flag palestine image">
+            <class="hero-logo">
+                <div class="hero-content">
+                    <img src="images/logo" alt="Logo Palestine News Hub">
+                    <h2
+                        class="hero-title">#FreePalestine</h2>
+                    <p class="hero-subtitle">Portal Berita Palestina
+                    </p>
+                    <p class="hero-description">Teruslah berjuang untuk
+                        saudara kita di Palestina.
+                    </p>
+                    <button class="cta-button"
+                        onclick="scrollToSection('news')">
+                        <i class="fas fa-newspaper"></i> Lihat Berita Terbaru
+                    </button>
+                </div>
+            </section>
+
+            <!-- Palestine Banner -->
+            <section class="palestine-banner-section">
+                <div class="palestine-banner-container">
+                    <div class="palestine-banner-grid">
+                        <div class="palestine-banner-content">
+                            <h2 class="palestine-banner-title">
+                                <i class="fas fa-flag palestine-flag-icon"></i>
+                                DON'T STOP TALKING ABOUT PALESTINE
+                            </h2>
+                            <p class="palestine-banner-description">
+                                <i class="fas fa-flag palestine-flag-icon"></i>
+                            </p>
+                        </div>
+                        <div class="palestine-banner-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">75+</span>
+                                <span class="stat-label">Tahun Penjajahan</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">5+</span>
+                                <span class="stat-label">Juta Pengungsi</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">15+</span>
+                                <span class="stat-label">Juta Di Dunia</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">1</span>
+                                <span class="stat-label">Harapan
+                                    Palestina</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI News Section -->
+            <section id="news" class="news-section">
+                <div class="container">
+                    <h2 class="section-title">
+                        <i class="fas fa-robot"></i> Berita Palestina dengan AI
+                    </h2>
+                    <div class="ai-photos">
+                        <img
+                            src="images/anak gaza kelaparan.jpg"
+                            alt="anak gaza kelaparan images" width="200"
+                            height="200"
+                            loading="lazy" class="rounded-img">
+                        <img
+                            src="images/anak-anak gaza.jpg"
+                            alt="anak-anak gaza images" width="200" height="200"
+                            loading="lazy" class="rounded-img">
+                        <img
+                            src="images/warga sipil.jpg"
+                            alt="warga sipil images"
+                            width="200" height="200" loading="lazy"
+                            class="rounded-img">
+                    </div>
+
+                    <!-- Documentary Video Section -->
+                    <div class="video-section">
+                        <h3 class="video-title">
+                            <i class="fas fa-play-circle"></i> Dokumenter: Kisah
+                            Palestina
+                        </h3>
+                        <div class="video-container">
+                            <blockquote class="twitter-tweet">
+                                <p lang="in" dir="ltr">PALESTINA: <a
+                                        href="https://t.co/8X8Qa8yV8t">https://t.co/8X8Qa8yV8t</a></p>&mdash;
+                                ARRAHMAH.ID (@arrahmah) <a
+                                    href="https://twitter.com/arrahmah/status/1777992416517116215?ref_src=twsrc%5Etfw">April
+                                    9, 2024</a>
+                            </blockquote>
+                            <script async
+                                src="https://platform.twitter.com/widgets.js"
+                                charset="utf-8"></script>
+                        </div>
+                        <p class="video-description">
+                            Video dokumenter ini adalah sejarah awal mula
+                            penjajahan
+                            terhadap Palestina
+                            yang diambil dari sumber-sumber resmi
+                        </p>
+                    </div>
+
+                    <!-- Auto-update section with timezone sync -->
+                    <div class="auto-update-section">
+                        <div class="update-controls">
+                            <button class="ai-button"
+                                onclick="fetchLatestNews()"
+                                id="auto-update-btn">
+                                <i class="fas fa-sync-alt"></i> Update Berita
+                                Terbaru
+                            </button>
+                            <button class="ai-button"
+                                onclick="toggleAutoUpdate()"
+                                id="auto-toggle-btn">
+                                <i class="fas fa-clock"></i> Auto Update: OFF
+                            </button>
+                            <select id="news-category"
+                                onchange="filterNews()"
+                                aria-label="Pilih kategori berita">
+                                <option value="all">Semua Kategori</option>
+                                <option value="gaza">Gaza</option>
+                                <option value="west-bank">Tepi Barat</option>
+                                <option
+                                    value="international">Internasional</option>
+                            </select>
+                            <div class="timezone-display" id="timezone-display">
+                                <i class="fas fa-globe"></i>
+                                <span id="current-timezone">Waktu Gaza:
+                                    GMT+3</span>
+                            </div>
+                        </div>
+                        <div class="url-sync">
+                            <p><strong>URL Terkait:</strong></p>
+                            <a href="https://time.is/Gaza" target="_blank"
+                                rel="noopener noreferrer">
+                                <i class="fas fa-external-link-alt"></i> Waktu
+                                Gaza
+                                Real-time
+                            </a>
+                            <a href="https://www.worldtimebuddy.com/"
+                                target="_blank" rel="noopener noreferrer">
+                                <i class="fas fa-external-link-alt"></i>
+                                Konverter
+                                Zona Waktu
+                            </a>
+                        </div>
+                    </div>
+                    <div id="news-table-container" class="news-grid">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Memuat berita terbaru...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Photo Gallery -->
+            <section id="photos" class="gallery-section">
+                <div class="container">
+                    <h2 class="section-title">
+                        <i class="fas fa-video"></i> <a
+                            href="https://www.skylinewebcams.com/webcam/palestine/gaza/gaza/gaza.html"
+                            target="_blank" rel="noopener noreferrer"
+                            class="no-link-style">CCTV
+                            Gaza Saat Ini, live real time ,klik disini</a>
+                    </h2>
+                    <div class="gallery-grid">
+                        <div class="gallery-item">
+                            <a href="https://palestine.com/" target="_blank"
+                                rel="noopener noreferrer">
+                                <img
+                                    src="https://palestine.com/wp-content/uploads/2024/01/gaza-latest-updates.jpg"
+                                    alt="palestine.com" width="200" height="200"
+                                    loading="lazy">
+                                <div class="gallery-overlay">
+                                    <h3>Kehancuran di Gaza</h3>
+                                    <p>Foto gedung-gedung yang hancur di
+                                        Gaza</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="gallery-item">
+                            <a
+                                href="https://www.istockphoto.com/id/foto-foto/jalur-gaza"
+                                target="_blank" rel="noopener noreferrer">
+                                <img
+                                    src="https://www.istockphoto.com/id/foto-foto/jalur-gaza"
+                                    alt="Gaza Strip Photos - Professional Photography"
+                                    width="200" height="200"
+                                    loading="lazy">
+                                <div class="gallery-overlay">
+                                    <h3>Gaza Strip Photography</h3>
+                                    <p>Professional stock photos of Gaza Strip -
+                                        Click to view full collection</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="gallery-item">
+                            <a
+                                href="https://en.m.wikipedia.org/wiki/Palestinian_refugees"
+                                target="_blank" rel="noopener noreferrer">
+                                <img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Refugee_camp_in_Gaza_2014.jpg/640px-Refugee_camp_in_Gaza_2014.jpg"
+                                    alt="Palestinian Refugees - Wikipedia"
+                                    loading="lazy">
+                                <div class="gallery-overlay">
+                                    <h3>Pengungsi Palestina</h3>
+                                    <p>Informasi lengkap tentang pengungsi
+                                        Palestina
+                                        - Klik untuk membaca di Wikipedia</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="gallery-item">
+                            <a href="https://www.aljazeera.com/where/palestine/"
+                                target="_blank" rel="noopener noreferrer">
+                                <img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Medical_aid_in_Gaza_2014.jpg/640px-Medical_aid_in_Gaza_2014.jpg"
+                                    alt="Medical aid" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <h3>Bantuan Medis</h3>
+                                    <p>Upaya penyelamatan korban konflik</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- News Sources -->
+            <section id="sources" class="sources-section">
+                <div class="container">
+                    <h2 class="section-title">
+                        <i class="fas fa-link"></i> Sumber Berita Palestina
+                        Resmi
+                    </h2>
+                    <div class="sources-grid">
+                        <a
+                            href="https://www.aljazeera.com/topics/regions/middleeast/palestine.html"
+                            class="source-card" target="_blank"
+                            rel="noopener noreferrer">
+                            <i class="fas fa-tv"></i>
+                            <h3>Al Jazeera</h3>
+                            <p>Liputan khusus Palestina</p>
+                        </a>
+                        <a
+                            href="https://www.middleeasteye.net/topics/palestine"
+                            class="source-card" target="_blank" rel="noopener">
+                            <i class="fas fa-globe"></i>
+                            <h3>Middle East Eye</h3>
+                            <p>Berita mendalam dari Timur Tengah</p>
+                        </a>
+                        <a href="https://www.maannews.net/" class="source-card"
+                            target="_blank" rel="noopener">
+                            <i class="fas fa-newspaper"></i>
+                            <h3>Ma'an News</h3>
+                            <p>Agensi berita Palestina</p>
+                        </a>
+                        <a href="https://www.wafa.ps/" class="source-card"
+                            target="_blank" rel="noopener">
+                            <i class="fas fa-broadcast-tower"></i>
+                            <h3>WAFA News</h3>
+                            <p>Agensi berita resmi Palestina</p>
+                        </a>
+                        <a
+                            href="https://www.youtube.com/redirect?event=channel_description&redir_token=QUFFLUhqbHYzRWN3aFhlNldvMU94UGlpdjJlUTlNYVg0QXxBQ3Jtc0tuZHNQMmYzNnFmR1RkT0VPZGVrUHJRNS0zR0hlRTZYXzZuc3Y3dUFRNWY5clZWTkg0OUs3T2FVLXFhU1Z1S2xhLTRDSDd3Qnl2Z29PbmxISnBDZHNvdFc2TE5vQkxjVUo4b0J4Unc3RVFIdC1VYUFtWQ&q=http%3A%2F%2Felectronicintifada.net"
+                            class="source-card" target="_blank" rel="noopener">
+                            <i class="fas fa-laptop"></i>
+                            <h3>Electronic Intifada</h3>
+                            <p>Jurnalisme independen Palestina</p>
+                        </a>
+                        <a href="https://www.palestinechronicle.com/"
+                            class="source-card" target="_blank" rel="noopener">
+                            <i class="fas fa-book"></i>
+                            <h3>Palestine Chronicle</h3>
+                            <p>Narasi Palestina untuk dunia</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="contact-section">
+                <div class="container">
+                    <h2 class="section-title">
+                        <i class="fas fa-envelope"></i> Hubungi Kami
+                    </h2>
+                    <div class="contact-content">
+                        <p>Ikuti kami di TikTok untuk update terbaru dan konten
+                            eksklusif:</p>
+                        <div class="social-links">
+                            <a
+                                href="https://www.tiktok.com/@2d_bumblebee_256_proxy?_t=ZS-8ynrppogo2J&_r=1"
+                                class="social-link" target="_blank"
+                                rel="noopener">
+                                <i class="fab fa-tiktok"></i>
+                                <span>@2d_bumblebee_256_proxy</span>
+                            </a>
+                            <a
+                                href="https://www.tiktok.com/@dewi.capricorn.10?_t=ZS-8ypsBD0Oizn&_r=1"
+                                class="social-link" target="_blank"
+                                rel="noopener">
+                                <i class="fab fa-tiktok"></i>
+                                <span>@dewi.capricorn.10</span>
+                            </a>
+                        </div>
+                        <div class="contact-info">
+                            <p><i class="fas fa-heart"></i> #FreePalestine
+                                #SaveGaza</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container">
+                    <p>&copy; 2025 Palestine News Hub. Dibuat dengan ❤️ untuk
+                        Palestina</p>
+                    <p>#FreePalestine #GazaStrong #PalestineWillBeFree</p>
+                </div>
+            </footer>
+
+            <script src="news-table.js"></script>
+            <script src="auto-update.js"></script>
+            <script src="script.js"></script>
+        </body>
+    </html>
