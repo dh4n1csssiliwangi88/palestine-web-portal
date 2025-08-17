@@ -1,104 +1,222 @@
-// Mobile Menu Toggle
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuBtn = document.getElementById('mobile-menu');
-    const nav = document.getElementById('main-navigation');
-    
-    if (mobileMenuBtn && nav) {
-        mobileMenuBtn.addEventListener('click', function() {
-            nav.classList.toggle('active');
-            const isExpanded = nav.classList.contains('active');
-            mobileMenuBtn.setAttribute('aria-expanded', isExpanded);
-            
-            const icon = mobileMenuBtn.querySelector('i');
-            if (isExpanded) {
-                icon.className = 'fas fa-times';
-            } else {
-                icon.className = 'fas fa-bars';
+// Main Application Script - Palestine News Hub
+class PalestineNewsHub {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.setupSmoothScrolling();
+        this.setupMobileMenu();
+        this.setupLazyLoading();
+        this.setupServiceWorker();
+        this.setupOfflineSupport();
+        this.setupAnalytics();
+    }
+
+    setupSmoothScrolling() {
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    }
+
+    setupMobileMenu() {
+        const mobileMenuBtn = document.getElementById('mobile-menu');
+        const nav = document.getElementById('main-navigation');
+        
+        if (mobileMenuBtn && nav) {
+            mobileMenuBtn.addEventListener('click', () => {
+                const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+                mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
+                nav.classList.toggle('active');
+                
+                // Change icon
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.className = isExpanded ? 'fas fa-bars' : 'fas fa-times';
+            });
+        }
+    }
+
+    setupLazyLoading() {
+        // Lazy loading for images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+    }
+
+    async setupServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            try {
+                await navigator.serviceWorker.register('/sw.js');
+                console.log('Service Worker registered successfully');
+            } catch (error) {
+                console.log('Service Worker registration failed:', error);
+            }
+        }
+    }
+
+    setupOfflineSupport() {
+        // Check if online/offline
+        window.addEventListener('online', () => {
+            this.showConnectionStatus('online');
+            if (window.newsTable) {
+                window.newsTable.loadNews();
+            }
+        });
+
+        window.addEventListener('offline', () => {
+            this.showConnectionStatus('offline');
+        });
+
+        // Initial check
+        if (!navigator.onLine) {
+            this.showConnectionStatus('offline');
+        }
+    }
+
+    showConnectionStatus(status) {
+        const statusBar = document.createElement('div');
+        statusBar.id = 'connection-status';
+        statusBar.className = `connection-status ${status}`;
+        statusBar.innerHTML = `
+            <i class="fas fa-${status === 'online' ? 'wifi' : 'exclamation-triangle'}"></i>
+            ${status === 'online' ? 'Kembali online' : 'Mode offline'}
+        `;
+
+        // Remove existing status bar
+        const existing = document.getElementById('connection-status');
+        if (existing) existing.remove();
+
+        document.body.appendChild(statusBar);
+
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            statusBar.style.opacity = '0';
+            setTimeout(() => statusBar.remove(), 300);
+        }, 3000);
+    }
+
+    setupAnalytics() {
+        // Simple analytics tracking
+        this.trackPageView();
+        this.trackUserInteractions();
+    }
+
+    trackPageView() {
+        // Track page views
+        const pageView = {
+            url: window.location.href,
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            referrer: document.referrer
+        };
+        
+        // Store in localStorage for basic analytics
+        const analytics = JSON.parse(localStorage.getItem('palestine-news-analytics') || '[]');
+        analytics.push(pageView);
+        localStorage.setItem('palestine-news-analytics', JSON.stringify(analytics));
+    }
+
+    trackUserInteractions() {
+        // Track button clicks
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('button, .btn-share, .btn-bookmark')) {
+                const interaction = {
+                    type: 'click',
+                    element: e.target.className,
+                    timestamp: new Date().toISOString()
+                };
+                
+                const interactions = JSON.parse(localStorage.getItem('palestine-news-interactions') || '[]');
+                interactions.push(interaction);
+                localStorage.setItem('palestine-news-interactions', JSON.stringify(interactions));
             }
         });
     }
 
-    document.addEventListener('click', function(event) {
-        if (!event.target.closest('.header')) {
-            nav.classList.remove('active');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
-            const icon = mobileMenuBtn.querySelector('i');
-            icon.className = 'fas fa-bars';
-        }
-    });
+    // Utility methods
+    static formatNumber(num) {
+        return new Intl.NumberFormat('id-ID').format(num);
+    }
 
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            nav.classList.remove('active');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
-            const icon = mobileMenuBtn.querySelector('i');
-            icon.className = 'fas fa-bars';
+    static formatDate(date) {
+        return new Intl.DateTimeFormat('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        }).format(date);
+    }
+
+    static debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+}
+
+// Performance monitoring
+class PerformanceMonitor {
+    constructor() {
+        this.measurePageLoad();
+    }
+
+    measurePageLoad() {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+            }, 0);
         });
-    });
+    }
+}
+
+// Initialize application
+document.addEventListener('DOMContentLoaded', () => {
+    new PalestineNewsHub();
+    new PerformanceMonitor();
+    
+    // Add loading state management
+    document.body.classList.add('loaded');
 });
 
-// Smooth scroll function
-function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start'
-        });
-    }
-}
-
-// Auto-update timezone display
-function updateTimezoneDisplay() {
-    const timezoneDisplay = document.getElementById('current-timezone');
-    if (timezoneDisplay) {
-        const gazaTime = new Date().toLocaleString('id-ID', {
-            timeZone: 'Asia/Gaza',
-            hour: '2-digit',
-            minute: '2-digit',
-            day: '2-digit',
-            month: '2-digit'
-        });
-        timezoneDisplay.textContent = `Waktu Gaza: ${gazaTime}`;
-    }
-}
-
-setInterval(updateTimezoneDisplay, 60000);
-updateTimezoneDisplay();
-
-// News update functions
-async function fetchLatestNews() {
-    if (typeof newsTable !== 'undefined') {
-        return await newsTable.refresh();
-    }
-    return false;
-}
-
-function toggleAutoUpdate() {
-    if (typeof newsTable !== 'undefined') {
-        const isActive = newsTable.toggleAutoUpdate();
-        const button = document.getElementById('auto-toggle-btn');
-        if (button) {
-            button.innerHTML = isActive 
-                ? '<i class="fas fa-clock"></i> Auto Update: ON' 
-                : '<i class="fas fa-clock"></i> Auto Update: OFF';
-        }
-        return isActive;
-    }
-    return false;
-}
-
-// Initialize news table on page load
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof newsTable !== 'undefined') {
-        newsTable.setNewsData(sampleNewsData);
-    }
+// Error handling
+window.addEventListener('error', (e) => {
+    console.error('Application error:', e.error);
 });
 
-// Clean up on page unload
-window.addEventListener('beforeunload', function() {
-    if (typeof newsTable !== 'undefined') {
-        newsTable.stopAutoUpdate();
-    }
+// Handle unhandled promise rejections
+window.addEventListener('unhandledrejection', (e) => {
+    console.error('Unhandled promise rejection:', e.reason);
 });
+
+// Export for global access
+window.PalestineNewsHub = PalestineNewsHub;

@@ -1,184 +1,216 @@
-// Auto Update Button Functionality
-// This file contains the complete auto update functionality for the Palestine News Hub
+// Auto Update Module - Handles automatic news updates and timezone sync
+class AutoUpdateManager {
+    constructor() {
+        this.isAutoUpdateEnabled = false;
+        this.updateInterval = null;
+        this.updateFrequency = 300000; // 5 minutes
+        this.gazaTimezone = 'Asia/Gaza';
+        this.init();
+    }
 
-// Auto-update timezone display
-function updateTimezoneDisplay() {
-    const timezoneDisplay = document.getElementById('current-timezone');
-    if (timezoneDisplay) {
-        const gazaTime = new Date().toLocaleString('id-ID', {
-            timeZone: 'Asia/Gaza',
-            hour: '2-digit',
-            minute: '2-digit',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
-        timezoneDisplay.textContent = `Waktu Gaza: ${gazaTime}`;
+    init() {
+        this.setupEventListeners();
+        this.updateGazaTime();
+        setInterval(() => this.updateGazaTime(), 60000); // Update every minute
+    }
+
+    setupEventListeners() {
+        // Auto update button
+        const autoToggleBtn = document.getElementById('auto-toggle-btn');
+        if (autoToggleBtn) {
+            autoToggleBtn.addEventListener('click', () => this.toggleAutoUpdate());
+        }
+
+        // Category filter
+        const categorySelect = document.getElementById('news-category');
+        if (categorySelect) {
+            categorySelect.addEventListener('change', (e) => {
+                if (window.newsTable) {
+                    window.newsTable.setCategory(e.target.value);
+                }
+            });
+        }
+
+        // Manual update button
+        const updateBtn = document.getElementById('auto-update-btn');
+        if (updateBtn) {
+            updateBtn.addEventListener('click', () => this.fetchLatestNews());
+        }
+    }
+
+    toggleAutoUpdate() {
+        this.isAutoUpdateEnabled = !this.isAutoUpdateEnabled;
+        const button = document.getElementById('auto-toggle-btn');
+        
+        if (this.isAutoUpdateEnabled) {
+            this.startAutoUpdate();
+            button.innerHTML = '<i class="fas fa-clock"></i> Auto Update: ON';
+            button.classList.add('active');
+        } else {
+            this.stopAutoUpdate();
+            button.innerHTML = '<i class="fas fa-clock"></i> Auto Update: OFF';
+            button.classList.remove('active');
+        }
+    }
+
+    startAutoUpdate() {
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+        }
+        
+        this.updateInterval = setInterval(() => {
+            this.fetchLatestNews();
+        }, this.updateFrequency);
+        
+        console.log('Auto update started with interval:', this.updateFrequency);
+    }
+
+    stopAutoUpdate() {
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+            this.updateInterval = null;
+        }
+        console.log('Auto update stopped');
+    }
+
+    async fetchLatestNews() {
+        const updateBtn = document.getElementById('auto-update-btn');
+        const originalText = updateBtn.innerHTML;
+        
+        // Show loading state
+        updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
+        updateBtn.disabled = true;
+        
+        try {
+            if (window.newsTable) {
+                await window.newsTable.loadNews();
+            }
+            
+            // Show success feedback
+            updateBtn.innerHTML = '<i class="fas fa-check"></i> Berhasil';
+            setTimeout(() => {
+                updateBtn.innerHTML = originalText;
+                updateBtn.disabled = false;
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Error fetching latest news:', error);
+            updateBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Gagal';
+            setTimeout(() => {
+                updateBtn.innerHTML = originalText;
+                updateBtn.disabled = false;
+            }, 3000);
+        }
+    }
+
+    updateGazaTime() {
+        const gazaTimeElement = document.getElementById('current-timezone');
+        if (!gazaTimeElement) return;
+        
+        try {
+            const now = new Date();
+            const options = {
+                timeZone: this.gazaTimezone,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            
+            const gazaTime = now.toLocaleTimeString('id-ID', options);
+            const gazaDate = now.toLocaleDateString('id-ID', {
+                timeZone: this.gazaTimezone,
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            gazaTimeElement.textContent = `Waktu Gaza: ${gazaTime} (${gazaDate})`;
+        } catch (error) {
+            console.error('Error updating Gaza time:', error);
+            gazaTimeElement.textContent = 'Waktu Gaza: GMT+3';
+        }
+    }
+
+    setUpdateFrequency(minutes) {
+        this.updateFrequency = minutes * 60000;
+        
+        if (this.isAutoUpdateEnabled) {
+            this.stopAutoUpdate();
+            this.startAutoUpdate();
+        }
+        
+        console.log(`Update frequency set to ${minutes} minutes`);
+    }
+
+    // Method to check if browser supports notifications
+    checkNotificationSupport() {
+        if (!('Notification' in window)) {
+            console.log('Browser tidak mendukung notifikasi');
+            return false;
+        }
+        
+        return true;
+    }
+
+    // Request notification permission
+    async requestNotificationPermission() {
+        if (!this.checkNotificationSupport()) return;
+        
+        try {
+            const permission = await Notification.requestPermission();
+            console.log('Notification permission:', permission);
+            return permission === 'granted';
+        } catch (error) {
+            console.error('Error requesting notification permission:', error);
+            return false;
+        }
+    }
+
+    // Show notification for new news
+    showNotification(title, body) {
+        if (!this.checkNotificationSupport()) return;
+        
+        if (Notification.permission === 'granted') {
+            new Notification(title, {
+                body: body,
+                icon: '/images/logo.png',
+                badge: '/images/logo-badge.png',
+                tag: 'palestine-news',
+                requireInteraction: false
+            });
+        }
     }
 }
 
-// Start timezone updates
-setInterval(updateTimezoneDisplay, 60000);
-updateTimezoneDisplay();
+// Global instance
+let autoUpdateManager;
 
-// News update functions
-async function fetchLatestNews() {
-    if (typeof newsTable !== 'undefined') {
-        const success = await newsTable.refresh();
-        if (success) {
-            showNotification('Berita berhasil diperbarui!', 'success');
-        } else {
-            showNotification('Gagal memperbarui berita', 'error');
-        }
-        return success;
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    autoUpdateManager = new AutoUpdateManager();
+    
+    // Request notification permission on first load
+    autoUpdateManager.requestNotificationPermission();
+});
+
+// Global functions for HTML onclick handlers
+function fetchLatestNews() {
+    if (autoUpdateManager) {
+        autoUpdateManager.fetchLatestNews();
     }
-    return false;
 }
 
 function toggleAutoUpdate() {
-    if (typeof newsTable !== 'undefined') {
-        const isActive = newsTable.toggleAutoUpdate();
-        const button = document.getElementById('auto-toggle-btn');
-        if (button) {
-            button.innerHTML = isActive 
-                ? '<i class="fas fa-clock"></i> Auto Update: ON' 
-                : '<i class="fas fa-clock"></i> Auto Update: OFF';
-            
-            // Update button style based on state
-            if (isActive) {
-                button.classList.add('active');
-                button.style.backgroundColor = '#28a745';
-            } else {
-                button.classList.remove('active');
-                button.style.backgroundColor = '';
-            }
-        }
-        
-        showNotification(
-            isActive ? 'Auto update diaktifkan' : 'Auto update dimatikan',
-            isActive ? 'success' : 'info'
-        );
-        
-        return isActive;
+    if (autoUpdateManager) {
+        autoUpdateManager.toggleAutoUpdate();
     }
-    return false;
 }
 
 function filterNews() {
     const categorySelect = document.getElementById('news-category');
-    if (categorySelect && typeof newsTable !== 'undefined') {
-        const selectedCategory = categorySelect.value;
-        newsTable.selectedCategory = selectedCategory;
-        newsTable.filterData();
+    if (categorySelect && window.newsTable) {
+        window.newsTable.setCategory(categorySelect.value);
     }
 }
-
-// Notification system
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
-        <span>${message}</span>
-        <button class="notification-close" onclick="this.parentElement.remove()">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-    
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 1rem 1.5rem;
-        border-radius: 5px;
-        color: white;
-        font-weight: 500;
-        z-index: 10000;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        max-width: 300px;
-        animation: slideInRight 0.3s ease;
-    `;
-    
-    if (type === 'success') {
-        notification.style.backgroundColor = '#28a745';
-    } else if (type === 'error') {
-        notification.style.backgroundColor = '#dc3545';
-    } else {
-        notification.style.backgroundColor = '#17a2b8';
-    }
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
-        }
-    }, 3000);
-}
-
-// Initialize auto update functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Set up button event listeners
-    const autoUpdateBtn = document.getElementById('auto-update-btn');
-    const autoToggleBtn = document.getElementById('auto-toggle-btn');
-    const categorySelect = document.getElementById('news-category');
-    
-    if (autoUpdateBtn) {
-        autoUpdateBtn.addEventListener('click', fetchLatestNews);
-    }
-    
-    if (autoToggleBtn) {
-        autoToggleBtn.addEventListener('click', toggleAutoUpdate);
-    }
-    
-    if (categorySelect) {
-        categorySelect.addEventListener('change', filterNews);
-    }
-    
-    // Add CSS for notifications
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        .notification-close {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            margin-left: auto;
-        }
-        
-        #auto-toggle-btn.active {
-            background-color: #28a745 !important;
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Initialize timezone display
-    updateTimezoneDisplay();
-});
-
-// Keyboard shortcuts
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.key === 'u') {
-        e.preventDefault();
-        fetchLatestNews();
-    }
-    
-    if (e.ctrlKey && e.shiftKey && e.key === 'U') {
-        e.preventDefault();
-        toggleAutoUpdate();
-    }
-});
